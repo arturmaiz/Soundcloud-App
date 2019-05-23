@@ -1,6 +1,6 @@
 import React from 'react';
 
-const RecentSearches = () => {
-	return <div>RecentSearches</div>;
+const RecentSearches = (props) => {
+	return <div>{props.searchTerms}</div>;
 };
 export default RecentSearches;

@@ -8,7 +8,11 @@ class SearchForm extends Component {
 	handleSubmit = (e) => {
 		e.preventDefault();
 
+		if (!this.state.searchTerm) {
+			return null;
+		}
 		this.props.fetchSongs(this.state.searchTerm);
+		this.setState({ searchTerm: '' });
 	};
 
 	render() {

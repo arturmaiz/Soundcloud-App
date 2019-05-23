@@ -5,5 +5,11 @@
 }
 
 body {
+    background: #f7f4f4;
     overflow: hidden;
+    padding: 1rem;
+}
+
+li {
+    list-style: none;
 }
