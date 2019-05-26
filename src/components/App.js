@@ -23,11 +23,13 @@ class App extends Component {
 		oEmbed: '',
 		selectedSong: '',
 		searchTerms: '',
-		showoEmbed: false
+		showoEmbed: false,
+		recentSearches: []
 	};
 
 	componentDidMount() {
 		this.fetchSongs();
+		this.addToLocalStorage();
 	}
 
 	fetchSongs = (searchTerm) => {
@@ -97,6 +99,23 @@ class App extends Component {
 		document.querySelector('.player').classList.add('hide');
 	};
 
+	addToLocalStorage = (song) => {
+		// TODOS: Fix localstorage problem, Array start with null on every refresh
+		if (localStorage.getItem('songs') === null) {
+			let songs = [ ...this.state.recentSearches, song ];
+			this.setState({ recentSearches: songs });
+			localStorage.setItem('songs', JSON.stringify(songs));
+		} else {
+			let songs = JSON.parse(localStorage.getItem('songs'));
+			if (songs.length > 5) {
+				songs.pop();
+			}
+			songs.push(song);
+			localStorage.setItem('songs', JSON.stringify(songs));
+		}
+		this.setState({ recentSearches: JSON.parse(localStorage.getItem('songs')) });
+	};
+
 	render() {
 		return (
 			<Container>
@@ -104,7 +123,7 @@ class App extends Component {
 					style={{ display: 'flex', flexDirection: 'column', justifyContent: 'spacep-between' }}
 					className="left-div"
 				>
-					<SearchForm fetchSongs={this.fetchSongs} />
+					<SearchForm addToLocalStorage={this.addToLocalStorage} fetchSongs={this.fetchSongs} />
 					{this.state.layout === 'grid' ? (
 						<SongsGrid
 							searchTerms={this.state.searchTerms}
@@ -136,7 +155,7 @@ class App extends Component {
 				</Col>
 
 				<Col style={{ textAlign: 'center' }} className="right-div">
-					<RecentSearches searchTerms={this.state.searchTerms} />
+					<RecentSearches recentSearches={this.state.recentSearches} />
 				</Col>
 			</Container>
 		);
