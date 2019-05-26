@@ -1,17 +1,19 @@
 import React from 'react';
-import styled from 'styled-components';
 
-import Song from '../Song/Song';
+import SongList from '../Song/SongList';
 
-const SongList = styled.div`
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-`;
+import { SongsListStyle } from '../../styles/SongsListStyle';
 
 const SongsList = (props) => {
 	const song = props.songs.map((song) => (
-		<Song renderImageSong={() => props.renderImageSong(song)} key={song.id} song={song} />
+		<SongList
+			layout={props.layout}
+			searchTerms={props.searchTerms}
+			renderImageSong={() => props.renderImageSong(song)}
+			key={song.id}
+			song={song}
+		/>
 	));
-	return <SongList>{song}</SongList>;
+	return <SongsListStyle>{song}</SongsListStyle>;
 };
 export default SongsList;

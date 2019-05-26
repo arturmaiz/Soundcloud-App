@@ -5,11 +5,19 @@
 }
 
 body {
-    background: #f7f4f4;
+    font-family: 'Montserrat', sans-serif;
     overflow: hidden;
     padding: 1rem;
 }
 
 li {
     list-style: none;
+}
+
+.hide {
+    display: none;
+}
+
+.oEmbed {
+    opacity: 1
 }

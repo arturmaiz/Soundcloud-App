@@ -1,11 +1,18 @@
 import React from 'react';
 
-import Song from '../Song/Song';
+import SongGrid from '../Song/SongGrid';
+
+import { SongsGridStyle } from '../../styles/SongsGridStyle';
 
 const SongsGrid = (props) => {
 	const song = props.songs.map((song) => (
-		<Song renderImageSong={() => props.renderImageSong(song)} key={song.id} song={song} />
+		<SongGrid
+			searchTerms={props.searchTerms}
+			renderImageSong={() => props.renderImageSong(song)}
+			key={song.id}
+			song={song}
+		/>
 	));
-	return <div>{song}</div>;
+	return <SongsGridStyle>{song}</SongsGridStyle>;
 };
 export default SongsGrid;

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Input, Button } from '@smooth-ui/core-sc';
 
 class SearchForm extends Component {
 	state = {
@@ -17,14 +18,21 @@ class SearchForm extends Component {
 
 	render() {
 		return (
-			<form onSubmit={this.handleSubmit}>
-				<input
+			<form style={{ display: 'flex', marginBottom: '20px' }} onSubmit={this.handleSubmit}>
+				<Input
+					style={{ borderTopRightRadius: '0', borderBottomRightRadius: '0', flexGrow: '1' }}
 					onChange={(e) => this.setState({ searchTerm: e.target.value })}
 					value={this.state.searchTerm}
 					type="text"
 					placeholder="Search"
 				/>
-				<button type="submit">Go</button>
+				<Button
+					style={{ borderTopLeftRadius: '0', borderBottomLeftRadius: '0', lineHeight: '1.65' }}
+					variant="dark"
+					type="submit"
+				>
+					Go
+				</Button>
 			</form>
 		);
 	}

@@ -1,10 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
-
-const Right = styled.div`
-	display: flex;
-	justify-content: space-between;
-`;
+import { ControlsWrapper } from '../../styles/ControlsWrapper';
 
 const Controls = (props) => {
 	const renderList = () => {
@@ -14,15 +9,18 @@ const Controls = (props) => {
 	const renderGrid = () => {
 		props.renderLayout('grid');
 	};
-
 	return (
-		<Right>
-			<i onClick={props.renderNewSongs} className="fas fa-2x fa-arrow-right" />
+		<ControlsWrapper>
+			<i style={{ cursor: 'pointer' }} onClick={props.renderNewSongs} className="fas fa-2x fa-arrow-right" />
 			<div className="right">
-				<i onClick={renderList} style={{ marginRight: '12px' }} className="fas fa-2x fa-list" />
-				<i onClick={renderGrid} className="fas fa-2x fa-th-large" />
+				<i
+					style={{ cursor: 'pointer', marginRight: '12px' }}
+					onClick={renderList}
+					className="fas fa-2x fa-list"
+				/>
+				<i style={{ cursor: 'pointer' }} onClick={renderGrid} className="fas fa-2x fa-th-large" />
 			</div>
-		</Right>
+		</ControlsWrapper>
 	);
 };
 export default Controls;

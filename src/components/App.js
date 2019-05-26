@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import SC from 'soundcloud';
-import styled from 'styled-components';
 import axios from 'axios';
 
 import SearchForm from './SearchForm/SearchForm';
@@ -10,39 +9,8 @@ import SongsList from './SongsList/SongsList';
 import SongsGrid from './SongsGrid/SongsGrid';
 import Controls from './Controls/Controls';
 
-const Wrapper = styled.div`
-	height: 100vh;
-	display: flex;
-	justify-content: space-around;
-	align-items: center;
-`;
-
-const LeftDiv = styled.div`
-	box-shadow: 0 4px 9px 1px #333;
-	padding: 10px;
-	width: 50%;
-	margin: 0 5px;
-	height: 60%;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-`;
-
-const CenterDiv = styled.div`
-	box-shadow: 0 4px 9px 1px #333;
-	padding: 10px;
-	width: 50%;
-	margin: 0 5px;
-	height: 60%;
-`;
-
-const RightDiv = styled.div`
-	box-shadow: 0 4px 9px 1px #333;
-	padding: 10px;
-	width: 50%;
-	margin: 0 5px;
-	height: 60%;
-`;
+import { Container } from '../styles/Container';
+import { Col } from '../styles/Col';
 
 const CLIENT_ID = 'ggX0UomnLs0VmW7qZnCzw';
 const PAGE_SIZE = 6;
@@ -53,26 +21,26 @@ class App extends Component {
 		nextSongs: '',
 		layout: 'list',
 		oEmbed: '',
-		searchTerms: [],
-		selectedSong: ''
+		selectedSong: '',
+		searchTerms: '',
+		showoEmbed: false
 	};
 
 	componentDidMount() {
-		// TODOS: Implement localstorage
 		this.fetchSongs();
 	}
 
 	fetchSongs = (searchTerm) => {
 		let newSearchTerms = this.state.searchTerms;
 		newSearchTerms = searchTerm;
-		this.setState({ searchTerms: newSearchTerms });
+		this.setState({ searchTerms: newSearchTerms, recentSearches: searchTerm });
 
 		SC.initialize({
 			client_id: CLIENT_ID
 		});
 
 		SC.get('/tracks', {
-			q: `${this.state.searchTerms}`,
+			q: searchTerm,
 			license: 'cc-by-sa',
 			limit: PAGE_SIZE,
 			linked_partitioning: 1
@@ -96,49 +64,81 @@ class App extends Component {
 	renderImageSong = (song) => {
 		const songs = !song.artwork_url ? (
 			<img
+				style={{ width: '300px', height: '300px' }}
 				src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/300px-No_image_available.svg.png"
 				alt="place holder"
 			/>
 		) : (
-			<img onClick={() => this.playSong(song.id)} src={song.artwork_url} alt="img" />
+			<img
+				style={{ width: '300px', height: '300px' }}
+				onClick={() => this.playSong(song)}
+				src={song.artwork_url}
+				alt="img"
+			/>
 		);
 		let copySong = this.state.selectedSong;
 		copySong = songs;
 		this.setState({ selectedSong: copySong });
+
+		document.querySelector('.player').classList.remove('hide');
+		document.querySelector('.oEmbed').classList.add('oEmbed');
 	};
 
-	playSong = (id) => {
-		// TODOS: replace this with embed widget!
-		// User can STOP/PAUSE
-		SC.stream(`/tracks/${id}`).then(function(player) {
-			player.play();
+	playSong = (song) => {
+		if (!song) {
+			return;
+		}
+
+		const permalink_url = `${song.permalink_url}`;
+		SC.oEmbed(permalink_url, { auto_play: true }).then((oEmbed) => {
+			this.setState({ oEmbed: oEmbed.html, showoEmbed: true });
 		});
+
+		document.querySelector('.player').classList.add('hide');
 	};
 
 	render() {
 		return (
-			<Wrapper>
-				<LeftDiv className="left-div">
+			<Container>
+				<Col
+					style={{ display: 'flex', flexDirection: 'column', justifyContent: 'spacep-between' }}
+					className="left-div"
+				>
 					<SearchForm fetchSongs={this.fetchSongs} />
 					{this.state.layout === 'grid' ? (
-						<SongsList renderImageSong={this.renderImageSong} songs={this.state.songs} />
+						<SongsGrid
+							searchTerms={this.state.searchTerms}
+							renderImageSong={this.renderImageSong}
+							songs={this.state.songs}
+						/>
 					) : (
-						<SongsGrid renderImageSong={this.renderImageSong} songs={this.state.songs} />
+						<SongsList
+							searchTerms={this.state.searchTerms}
+							renderImageSong={this.renderImageSong}
+							songs={this.state.songs}
+						/>
 					)}
-					<Controls renderLayout={this.renderLayout} renderNewSongs={this.renderNewSongs} />
-				</LeftDiv>
-				<CenterDiv className="center-div">
+					<Controls
+						searchTerm={this.state.searchTerm}
+						renderLayout={this.renderLayout}
+						renderNewSongs={this.renderNewSongs}
+					/>
+				</Col>
+
+				<Col style={{ textAlign: 'center' }} className="center-div">
 					<Player
 						songs={this.state.songs}
 						playSong={this.playSong}
 						oEmbed={this.state.oEmbed}
 						selectedSong={this.state.selectedSong}
+						showoEmbed={this.state.showoEmbed}
 					/>
-				</CenterDiv>
-				<RightDiv className="right-div">
+				</Col>
+
+				<Col style={{ textAlign: 'center' }} className="right-div">
 					<RecentSearches searchTerms={this.state.searchTerms} />
-				</RightDiv>
-			</Wrapper>
+				</Col>
+			</Container>
 		);
 	}
 }

@@ -1,13 +1,21 @@
 import React from 'react';
-import styled from 'styled-components';
 
-const PlayerWrapper = styled.div``;
+import { PlayerStyle } from '../../styles/PlayerStyle';
 
 const Player = (props) => {
+	const renderIframe = () => {
+		return {
+			__html: props.oEmbed
+		};
+	};
+
 	return (
-		<div>
-			<PlayerWrapper onClick={() => props.playSong()}>{props.selectedSong}</PlayerWrapper>
-		</div>
+		<PlayerStyle>
+			<div className="player" onClick={() => props.playSong()}>
+				{props.selectedSong}
+			</div>
+			<div className="oEmbed" dangerouslySetInnerHTML={renderIframe()} />
+		</PlayerStyle>
 	);
 };
 export default Player;
