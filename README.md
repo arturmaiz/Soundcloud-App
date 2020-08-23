@@ -14,7 +14,7 @@ git clone https://github.com/arturmaiz/Soundcloud-App.git
 ```
 2. Get in the project folder
 ```shell
-cd Soundcloud-App
+cd lets-eat
 ```
 3. Install dependencies via npm or yarn
 ```shell
@@ -22,12 +22,6 @@ npm install
 ```
 ```shell
 yarn install
-```
-
-## Quick start
-Run development server
-```shell
-yarn run serve
 ```
 
 ## How can I support developers?
